@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tennis Tournament Scores</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      text-align: center;
+      color: white;
+      background-color: #8b0000;
+      padding: 15px;
+      margin: 0;
+    }
+    table {
+      border-collapse: collapse;
+      width: 90%;
+      margin: 30px auto;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #8b0000;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Tennis Tournament Scores</h1>
+
+  <table id="scoresTable">
+    <thead>
+      <tr>
+        <th>Player 1</th>
+        <th>Player 1 Score</th>
+        <th>Player 2</th>
+        <th>Player 2 Score</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const SHEET_ID = "1wcxIziwZI3-U3xYcFev6gObb13uyv5h-4Z1RvYjurNo"; // your Google Sheet ID
+    const SHEET_NAME = "Round 1"; // tab name in your Google Sheet
+    const sheetUrl = `https://opensheet.elk.sh/${SHEET_ID}/${encodeURIComponent(SHEET_NAME)}`;
+
+    fetch(sheetUrl)
+      .then(response => response.json())
+      .then(data => {
+        const tableBody = document.querySelector("#scoresTable tbody");
+        tableBody.innerHTML = "";
+
+        data.forEach(row => {
+          // Find possible player/score keys dynamically
+          const keys = Object.keys(row);
+          const player1 = keys.find(k => k.includes("Salma") || k.includes("Entry List")) || keys[0];
+          const player2 = Object.values(row).find(v => typeof v === "string" && v !== "" && !v.includes(":")) || "-";
+
+          const score1 = row[keys.find(k => k.includes("10."))] || row[keys[1]] || "-";
+          const score2 = row[keys.find(k => k === "66")] || "-";
+
+          const htmlRow = `
+            <tr>
+              <td>${player1}</td>
+              <td>${score1}</td>
+              <td>${player2}</td>
+              <td>${score2}</td>
+            </tr>
+          `;
+          tableBody.innerHTML += htmlRow;
+        });
+      })
+      .catch(error => {
+        console.error("Error loading data:", error);
+        document.querySelector("#scoresTable tbody").innerHTML = `
+          <tr><td colspan="4">Failed to load data</td></tr>
+        `;
+      });
+  </script>
+
+</body>
+</html>
