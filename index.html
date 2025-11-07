@@ -1,98 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Tennis Tournament Scores</title>
+  <title>Tennis Tournament</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f7f7f7;
-      margin: 0;
-      padding: 0;
-    }
-    h1 {
-      text-align: center;
-      color: white;
-      background-color: #8b0000;
-      padding: 15px;
-      margin: 0;
-    }
-    table {
-      border-collapse: collapse;
-      width: 90%;
-      margin: 30px auto;
-      background-color: white;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 10px;
-      text-align: center;
-    }
-    th {
-      background-color: #8b0000;
-      color: white;
-    }
-    tr:nth-child(even) {
-      background-color: #f2f2f2;
-    }
+    body { font-family: Arial; padding: 20px; }
+    h2 { margin-top: 30px; }
+    ul { list-style: none; padding: 0; }
+    li { margin-bottom: 5px; }
   </style>
 </head>
 <body>
-
-  <h1>Tennis Tournament Scores</h1>
-
-  <table id="scoresTable">
-    <thead>
-      <tr>
-        <th>Player 1</th>
-        <th>Player 1 Score</th>
-        <th>Player 2</th>
-        <th>Player 2 Score</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <h1>Tennis Tournament Bracket</h1>
+  <div id="entryList"></div>
+  <div id="round1"></div>
+  <div id="round2"></div>
 
   <script>
-    const SHEET_ID = "1wcxIziwZI3-U3xYcFev6gObb13uyv5h-4Z1RvYjurNo"; // your Google Sheet ID
-    const SHEET_NAME = "Round 1"; // tab name in your Google Sheet
-    const sheetUrl = "https://opensheet.elk.sh/1wcxIziwZl3-U3xYcFev6gObb13uyv5h-4Z1RvYjurNo/Round%201" ;
+    const sheetId = '1wcxIziwZl3-U3xYcFev6gObb13uyv5h-4Z1RvYjurNo';
+    const range = 'Sheet1!A1:F20';
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=AIzaSyCtV7em8YM3pwe-UQWP--3vNw3802iPnRc`;
 
-    fetch(sheetUrl)
-      .then(response => response.json())
+    fetch(url)
+      .then(res => res.json())
       .then(data => {
-        const tableBody = document.querySelector("#scoresTable tbody");
-        tableBody.innerHTML = "";
+        const rows = data.values;
+        const entryList = rows.slice(1, 6).map(r => r[1]);
+        const round1 = rows.slice(1, 6).map(r => ({ player: r[1], scores: [r[2], r[3]] }));
+        const round2 = rows.slice(1, 6).map(r => r[5]);
 
-        data.forEach(row => {
-          // Find possible player/score keys dynamically
-          const keys = Object.keys(row);
-          const player1 = keys.find(k => k.includes("Salma") || k.includes("Entry List")) || keys[0];
-          const player2 = Object.values(row).find(v => typeof v === "string" && v !== "" && !v.includes(":")) || "-";
-
-          const score1 = row[keys.find(k => k.includes("10."))] || row[keys[1]] || "-";
-          const score2 = row[keys.find(k => k === "66")] || "-";
-
-          const htmlRow = `
-            <tr>
-              <td>${player1}</td>
-              <td>${score1}</td>
-              <td>${player2}</td>
-              <td>${score2}</td>
-            </tr>
-          `;
-          tableBody.innerHTML += htmlRow;
-        });
-      })
-      .catch(error => {
-        console.error("Error loading data:", error);
-        document.querySelector("#scoresTable tbody").innerHTML = `
-          <tr><td colspan="4">Failed to load data</td></tr>
-        `;
+        document.getElementById('entryList').innerHTML = `<h2>Entry List</h2><ul>${entryList.map(p => `<li>${p}</li>`).join('')}</ul>`;
+        document.getElementById('round1').innerHTML = `<h2>Round 1</h2><ul>${round1.map(m => `<li>${m.player}: ${m.scores.join(', ')}</li>`).join('')}</ul>`;
+        document.getElementById('round2').innerHTML = `<h2>Round 2</h2><ul>${round2.map(p => `<li>${p}</li>`).join('')}</ul>`;
       });
   </script>
-
 </body>
 </html>
-
