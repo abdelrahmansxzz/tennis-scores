@@ -2,7 +2,7 @@
 
 // 🚨 STEP 1: PASTE YOUR PUBLISHED CSV URL HERE
 // This is the link you copied from File > Share > Publish to the web.
-const GOOGLE_SHEET_URL = 'YOUR_PUBLISHED_CSV_LINK_HERE';
+const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1wcxIziwZl3-U3xYcFev6gObb13uyv5h-4Z1RvYjurNo/edit?gid=1781851050#gid=1781851050';
 
 const tableBody = document.getElementById('scores-table-body');
 
