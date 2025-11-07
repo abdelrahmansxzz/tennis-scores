@@ -1,36 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Tennis Tournament</title>
+  <title>Tennis Tournament Bracket</title>
   <style>
-    body { font-family: Arial; padding: 20px; }
-    h2 { margin-top: 30px; }
+    body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: auto; }
+    h1 { text-align: center; }
+    h2 { margin-top: 40px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
     ul { list-style: none; padding: 0; }
-    li { margin-bottom: 5px; }
+    li { margin-bottom: 8px; }
   </style>
 </head>
 <body>
   <h1>Tennis Tournament Bracket</h1>
-  <div id="entryList"></div>
-  <div id="round1"></div>
-  <div id="round2"></div>
+  <div id="matches"></div>
 
   <script>
-    const sheetId = '1wcxIziwZl3-U3xYcFev6gObb13uyv5h-4Z1RvYjurNo';
-    const range = 'Sheet1!A1:F20';
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=AIzaSyCtV7em8YM3pwe-UQWP--3vNw3802iPnRc`;
+    const sheetId = '1wcxIziwZl3-U3xYcFev6gObb13uyv5h-4Z1RvYjurNo'; // Replace with your actual Sheet ID
+    const apiKey = 'AIzaSyCtV7em8YM3pwe-UQWP--3vNw3802iPnRc';   // Replace with your actual API key
+    const range = 'Sheet1!A1:D20';        // Adjust based on your sheet layout
+
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
 
     fetch(url)
-      .then(res => res.json())
+      .then(response => response.json())
       .then(data => {
         const rows = data.values;
-        const entryList = rows.slice(1, 6).map(r => r[1]);
-        const round1 = rows.slice(1, 6).map(r => ({ player: r[1], scores: [r[2], r[3]] }));
-        const round2 = rows.slice(1, 6).map(r => r[5]);
+        if (!rows || rows.length < 2) {
+          document.body.innerHTML += '<p>No match data found.</p>';
+          return;
+        }
 
-        document.getElementById('entryList').innerHTML = `<h2>Entry List</h2><ul>${entryList.map(p => `<li>${p}</li>`).join('')}</ul>`;
-        document.getElementById('round1').innerHTML = `<h2>Round 1</h2><ul>${round1.map(m => `<li>${m.player}: ${m.scores.join(', ')}</li>`).join('')}</ul>`;
-        document.getElementById('round2').innerHTML = `<h2>Round 2</h2><ul>${round2.map(p => `<li>${p}</li>`).join('')}</ul>`;
+        const matchList = rows.slice(1).map(r => {
+          const p1 = r[0], s1 = r[1], p2 = r[2], s2 = r[3];
+          return `${p1} (${s1}) vs ${p2} (${s2})`;
+        });
+
+        document.getElementById('matches').innerHTML =
+          `<h2>Round 1 Matches</h2><ul>${matchList.map(m => `<li>${m}</li>`).join('')}</ul>`;
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+        document.body.innerHTML += '<p>Error loading matches. Check API key and Sheet ID.</p>';
       });
   </script>
 </body>
