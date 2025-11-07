@@ -1,22 +1,10 @@
-// ... (inside the dataRows.forEach loop)
-        dataRows.forEach(rowString => {
-            // ... (previous logic for splitting rows)
-            const data = rowString.split(','); 
-            
-            // We expect 3 data points: Player, Score, Opponent
-            if (data.length >= 3 && data[0].trim() !== '') {
-                const row = document.createElement('tr');
+// script.js
 
-                // data[0] = Player Name (New First Column)
-                // data[1] = Match Score/Status (New Second Column)
-                // data[2] = Opponent Name (New Third Column)
-                row.innerHTML = `
-                    <td class="player-name">${data[0].trim()}</td>
-                    <td class="match-score">${data[1].trim()}</td>
-                    <td class="opponent-name">${data[2].trim()}</td>
-                `;
-                
-                tableBody.appendChild(row);
-            }
-        });
-// ...
+// 🚨 PASTE YOUR SHEET ID into the link below
+const SHEET_ID = '1wcxIziwZl3-U3xYcFev6gObb13uyv5h-4Z1RvYjurNo'; // e.g., '1z2x3c4v5b6n7m8l9k0j'
+
+// This is the guaranteed-to-work developer link for fetching CSV data.
+const GOOGLE_SHEET_URL = `https://docs.google.com/spreadsheets/d/1wcxIziwZl3-U3xYcFev6gObb13uyv5h-4Z1RvYjurNo/edit?gid=1781851050#gid=1781851050`;
+
+const tableBody = document.getElementById('scores-table-body');
+// ... rest of the fetchAndDisplayScores function remains the same ...
