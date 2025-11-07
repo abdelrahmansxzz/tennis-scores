@@ -1,0 +1,63 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f4f4f9;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+table {
+    width: 80%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: white;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+thead th {
+    font-weight: bold;
+    font-size: 18px;
+    color: white;
+}
+
+/* Specific styling for the Round 1 header (Red background) */
+.round-1 {
+    background-color: #a51c1c;
+    border-color: #a51c1c;
+}
+
+/* Specific styling for the Round 2 header */
+.round-2 {
+    background-color: #333;
+    border-color: #333;
+}
+
+/* Styling for the Entry List header */
+thead tr:first-child th:first-child {
+    background-color: #f0f0f0;
+    color: #333;
+    font-size: 24px;
+}
+
+/* Bold the player names */
+.player-name {
+    font-weight: bold;
+    text-align: left;
+    background-color: #f9f9f9;
+}
+
+/* Highlight the status column */
+.round-status {
+    font-weight: bolder;
+    color: #a51c1c;
+}
